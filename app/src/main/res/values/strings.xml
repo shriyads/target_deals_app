@@ -1,0 +1,22 @@
+<resources>
+  <string name="app_name">Target Deals</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+  <!---DealsList-->
+  <string name="deals_list_title">All Deals</string>
+  <string name="product_details_title">Product details</string>
+  <string name="see_less_title">See less</string>
+  <string name="see_more_title">See more</string>
+  <string name="add_to_cart">Add to Cart</string>
+  <string name="search_deals">What can we help you find?</string>
+  <string name="no_deals_found">No deals found for "%1$s"</string>
+  <string name="no_deals_available">No deals available at the moment.</string>
+
+
+  <!---DealDetails-->
+  <string name="deal_Details_not_found_error">Deal not found.</string>
+  <string name="deals_details_title">Deal Details</string>
+</resources>

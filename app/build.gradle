@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+
+android {
+    compileSdk 35
+    defaultConfig {
+        applicationId "com.target.targetcasestudy"
+        minSdkVersion 24
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BASE_URL", '"https://api.target.com/mobile_case_study_deals/v1/"'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled = true
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    namespace 'com.target.targetcasestudy'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libs.kotlin
+
+    implementation libs.androidXAppCompat
+    implementation libs.androidXActivityCompose
+    implementation libs.androidXConstraintLayout
+    implementation libs.androidXRecyclerView
+
+    //Compose
+    implementation platform(libs.composeBom)
+    implementation libs.composeRuntime
+    implementation libs.composeUi
+    implementation libs.composeFoundation
+    implementation libs.androidXUITooling
+    implementation libs.composeMaterialDesign
+
+    implementation libs.retrofit
+    implementation libs.retrofitRx2Adapter
+    implementation libs.okHttp
+
+    // JSON Parsing
+    implementation libs.gson
+
+    // Moshi
+    implementation(libs.moshi.v1150)
+    implementation(libs.moshi.kotlin)
+    implementation libs.navigation.runtime.android
+    implementation libs.core.ktx
+    implementation libs.core.ktx
+    implementation libs.hilt.common
+    implementation libs.work.runtime.ktx
+    implementation libs.hilt.work
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.work.testing
+    ksp(libs.moshi.kotlin.codegen.v1150)
+
+// Retrofit + Moshi Converter
+    implementation(libs.converter.moshi)
+
+    implementation libs.jackson
+
+    // Image Loading
+    implementation libs.glide
+    implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
+
+    implementation libs.hiltAndroid
+
+    // Kotlin DSL (build.gradle.kts)
+    implementation(libs.hilt.navigation.compose)
+
+
+    // Room Core
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    testImplementation(libs.room.testing)
+    coreLibraryDesugaring libs.desugar.jdk.libs
+
+    //timber logging
+    implementation libs.timber
+    ksp(libs.dagger.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler) // for WorkManager support
+
+
+    //Material3
+    implementation(libs.material3)
+    implementation(libs.foundation)
+    implementation(libs.constraintlayout.compose)
+    implementation(libs.constraintlayout.compose.v101)
+    implementation(libs.foundation.v154)
+    implementation libs.core.splashscreen
+    implementation libs.material3.v121 // or latest stable
+    implementation libs.material.icons.core
+    implementation(libs.material.icons.extended)
+    implementation(libs.foundation.v167)
+    implementation libs.accompanist.swiperefresh
+    implementation libs.foundation.v168
+
+
+    //Navigation compose
+    implementation libs.navigation.compose
+
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.androidXTestRunner
+    androidTestImplementation libs.androidXTestCore
+    androidTestImplementation libs.androidXTestExtJunit
+    androidTestImplementation libs.espressoCore
+    testImplementation libs.truth
+    // Unit test and coroutine support
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+// Mocking
+    testImplementation(libs.mockk)
+    testImplementation libs.turbine
+
+
+
+}
