@@ -167,7 +167,6 @@ fun DealDetailsContent(
                     .fillMaxWidth()
                     .height(30.dp)
             )
-
             Text(
                 text = stringResource(R.string.product_details_title),
                 style = TextStyle(
