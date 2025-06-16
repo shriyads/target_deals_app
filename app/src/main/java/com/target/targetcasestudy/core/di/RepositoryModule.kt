@@ -34,7 +34,6 @@ object RepositoryModule {
         apiResultHandler: ApiResultHandler,
         dealDtoToDealEntityMapper: DealsDtoToEntityMapper,
         dealEntityToDealMapper: DealsEntityToDomainMapper,
-        @ApplicationContext context: Context
     ): DealsRepository {
         return DealsRepositoryImpl(
             apiService,
@@ -42,7 +41,7 @@ object RepositoryModule {
             apiResultHandler,
             dealDtoToDealEntityMapper,
             dealEntityToDealMapper,
-            context
+
         )
     }
 }

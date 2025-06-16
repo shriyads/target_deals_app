@@ -28,7 +28,6 @@ class DealsRepositoryImpl @Inject constructor(
     private val apiResultHandler: ApiResultHandler,
     private val dealDtoToDealEntityMapper: DealsDtoToEntityMapper,
     private val dealEntityToDealMapper: DealsEntityToDomainMapper,
-    @ApplicationContext private val appContext: Context
 ) : DealsRepository {
 
 
@@ -54,10 +53,7 @@ class DealsRepositoryImpl @Inject constructor(
                             if (!dealEntities.isNullOrEmpty()) {
                                 dealDao.insertAllDeals(dealEntities)
                                 Timber.d("Inserted ${dealEntities.size} deals into DB.")
-                                // If API call was successful, any pending retry work can be cancelled.
-                                // This is crucial to prevent unnecessary WorkManager execution if data is fresh.
-                                WorkManager.getInstance(appContext)
-                                    .cancelUniqueWork(OFFLINE_DATA_SYNC_WORK_NAME)
+
                             } else {
                                 Timber.d("Empty or null dealEntities from API.")
                             }
@@ -126,9 +122,7 @@ class DealsRepositoryImpl @Inject constructor(
                             val dealEntity = dealDtoToDealEntityMapper.map(dealDto)
                             dealDao.insertDeal(dealEntity)
                             Timber.d("Fetched and inserted deal $dealId from API into DB.")
-                            // If API call was successful, any pending retry work can be cancelled.
-                            WorkManager.getInstance(appContext)
-                                .cancelUniqueWork(OFFLINE_DATA_SYNC_WORK_NAME)
+
                         }
 
                         is APIResult.Error -> {
