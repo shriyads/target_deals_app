@@ -39,7 +39,8 @@ class DealsRepositoryImpl @Inject constructor(
                 ?.map { dealDtoToDealEntityMapper.map(it) }
 
             if (!entities.isNullOrEmpty()) {
-                dealDao.insertAllDeals(entities)
+                dealDao.deleteAllDeals()
+                dealDao.refreshDeals(entities)
                 Timber.d("Inserted ${entities.size} deals into DB.")
             } else {
                 Timber.d("Empty or null deals received from API.")
@@ -55,19 +56,16 @@ class DealsRepositoryImpl @Inject constructor(
                     if (entities.isNotEmpty()) {
                         APIResult.Success(entities.map(dealEntityToDealMapper::map))
                     } else if (apiResult is APIResult.Error) {
-
                         APIResult.Error(
                             apiResult.exception,
                             apiResult.apiErrorCode,
                             apiResult.apiMessage
                         )
                     } else {
-                        // DB is empty, but API was successful (with no data)
                         APIResult.Success(emptyList())
                     }
                 }
                 .catch { e ->
-
                     Timber.e(e, "Error reading deals from DB.")
                     emit(
                         APIResult.Error(

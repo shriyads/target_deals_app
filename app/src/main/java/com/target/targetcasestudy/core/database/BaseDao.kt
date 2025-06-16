@@ -14,4 +14,5 @@ interface BaseDao<T> {
 
     @Delete
     suspend fun delete(item: T)
+
 }
