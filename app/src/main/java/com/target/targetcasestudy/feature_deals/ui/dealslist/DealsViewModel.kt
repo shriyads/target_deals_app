@@ -1,6 +1,5 @@
 package com.target.targetcasestudy.feature_deals.ui.dealslist
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.target.targetcasestudy.core.ui.utils.UIState
@@ -66,19 +65,11 @@ class DealsViewModel @Inject constructor(
 
     /**
      * Updates the current search query.
-     * @param newQuery The new search query string.
      */
     fun onSearchQueryChange(newQuery: String) {
         _searchQuery.value = newQuery
     }
 
-    /**
-     * Fetches deals from the repository. This method is called both on initial load
-     * and when a refresh is triggered.
-     *
-     * @param fromUserInitiatedRefresh If true, it indicates this fetch is from a user-triggered refresh
-     * (e.g., pull-to-refresh) and should show the refreshing indicator.
-     */
     private fun fetchDeals(fromUserInitiatedRefresh: Boolean) {
         viewModelScope.launch {
             // Set refreshing state to true ONLY if it's a user-initiated refresh

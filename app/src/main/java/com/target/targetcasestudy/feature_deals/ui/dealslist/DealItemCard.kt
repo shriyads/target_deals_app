@@ -150,23 +150,21 @@ fun DealItemCard(
         Button(
             onClick = { /* Handle add to cart logic here */ }, // TODO: Add actual add-to-cart logic
             colors = ButtonDefaults.buttonColors(backgroundColor = com.target.targetcasestudy.core.ui.theme.PrimaryRed),
-            shape = RoundedCornerShape(Padding_20), // Rounded corners
+            shape = RoundedCornerShape(Padding_20),
             modifier = Modifier
-                .width(130.dp) // Fixed width for the button
-                .height(35.dp) // Fixed height for the button
+                .width(130.dp)
+                .height(35.dp)
                 .constrainAs(addToCartButtonRef) {
-                    // Position below availability/aisle text
                     top.linkTo(availabilityRef.bottom, margin = Padding_10)
-                    // Center horizontally within the guideline to end boundary
                     start.linkTo(guideline)
                     end.linkTo(parent.end)
                     width =
-                        Dimension.preferredWrapContent // Allow button to wrap content but prioritize fixed width
+                        Dimension.preferredWrapContent
                 }
         ) {
             Text(
                 text = stringResource(R.string.add_to_cart),
-                color = Color.White, // White text for contrast on red button
+                color = Color.White,
                 style = TextStyle(
                     fontFamily = RobotoFontFamily,
                     fontWeight = FontWeight.Bold,

@@ -56,8 +56,8 @@ fun DealsListScreen(
 ) {
     // Observe UI state from the ViewModel
     val dealsState by viewModel.dealsState.collectAsStateWithLifecycle()
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val filteredDeals by viewModel.filteredDeals.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val filteredDeals by viewModel.filteredDeals.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle() // Observe refresh state
 
     // State for LazyColumn scrolling
@@ -68,31 +68,24 @@ fun DealsListScreen(
         viewModel.onSearchQueryChange("")
     }
 
-    // Create the pull refresh state. This should be outside the `when` to always be available.
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = viewModel::refreshDeals
     )
 
-    // Remember a scroll state for the main content column to ensure it's always scrollable.
-    // This allows pull-to-refresh even when content is short or an error screen is shown.
     val mainColumnScrollState = rememberScrollState()
 
-    // Wrap the entire content with a Box and apply the pullRefresh modifier
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White) // Set the overall background color to white
-            .pullRefresh(pullRefreshState) // Apply the pullRefresh modifier to the entire Box
+            .background(Color.White)
+            .pullRefresh(pullRefreshState)
     ) {
-        // Main content column that is always scrollable.
-        // The `verticalScroll` modifier here ensures that even if the visible content
-        // (e.g., ErrorScreen or CircularProgressIndicator) is short, the Column itself
-        // is scrollable, allowing the pull-to-refresh gesture to be detected.
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(mainColumnScrollState) // Make this column always scrollable
+                .verticalScroll(mainColumnScrollState)
         ) {
             // Divider at the top
             Divider(
@@ -103,7 +96,7 @@ fun DealsListScreen(
                 color = LightGray
             )
 
-            // Search Bar (always visible, outside the `when` block)
+
             SearchBar(
                 query = searchQuery,
                 onQueryChange = viewModel::onSearchQueryChange,
@@ -117,58 +110,48 @@ fun DealsListScreen(
             // Display content based on the UIState
             when (dealsState) {
                 is UIState.Loading -> {
-                    // Center the loading indicator within the remaining space of the Column,
-                    // making sure it fills vertically to allow scrolling for PTR.
                     CircularProgressIndicator(
                         color = PrimaryRed,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight() // Fill max height to make the column scrollable
+                            .fillMaxHeight()
                             .wrapContentSize(Alignment.Center)
                     )
                 }
                 is UIState.Error -> {
                     val errorState = dealsState as UIState.Error
-                    // Ensure the error screen fills the remaining vertical space,
-                    // making the column scrollable for PTR.
                     ErrorScreen(
                         message = errorState.message ?: "Something went wrong loading deals.",
-                        onRetry = { viewModel.refreshDeals() }, // Provide retry action
+                        onRetry = { viewModel.refreshDeals() },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight() // Fill max height to make the column scrollable
-                            .wrapContentSize(Alignment.Center) // Center its content
+                            .fillMaxHeight()
+                            .wrapContentSize(Alignment.Center)
                     )
                 }
                 is UIState.Success -> {
                     val allDeals = (dealsState as UIState.Success).data
                     val dealsToDisplay = if (searchQuery.isBlank()) allDeals else filteredDeals
-
-                    // Delegate the rendering of the list content.
-                    // This will naturally be scrollable via its LazyColumn.
                     DealsListContent(
                         deals = dealsToDisplay,
                         searchQuery = searchQuery,
                         onDealClick = onDealClick,
                         listState = listState,
-                        modifier = Modifier.weight(1f) // Make the list fill remaining space
+                        modifier = Modifier.weight(1f)
                     )
                 }
                 UIState.Idle -> {
-                    // Initial state, ensure there's enough height to enable pull-to-refresh.
-                    // A Spacer filling the remaining height makes the Column scrollable.
                     Spacer(modifier = Modifier.fillMaxHeight())
                 }
             }
         }
 
-        // Place the PullRefreshIndicator on top, aligned centrally, always within the Box.
         PullRefreshIndicator(
-            refreshing = isRefreshing, // Controls the visibility and animation
-            state = pullRefreshState, // Linked to the pull refresh state
-            modifier = Modifier.align(Alignment.TopCenter), // Align to the top center of the Box
-            backgroundColor = Color.White, // Background color of the indicator
-            contentColor = PrimaryRed // Color of the rotating indicator
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            backgroundColor = Color.White,
+            contentColor = PrimaryRed
         )
     }
 }
