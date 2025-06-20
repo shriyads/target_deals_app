@@ -51,7 +51,6 @@ class DealsRepositoryImpl @Inject constructor(
             Timber.e(apiResult.exception, "API error while fetching deals: ${apiResult.apiMessage}")
         }
 
-
         emitAll(
             dealDao.getAllDeals()
                 .map { entities ->
