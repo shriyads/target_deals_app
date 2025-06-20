@@ -47,7 +47,10 @@ class DealsViewModel @Inject constructor(
     init {
         // Initial data fetch, not a user-initiated refresh
         fetchDeals(fromUserInitiatedRefresh = false)
+        observeSearchQuery()
 
+    }
+    private fun observeSearchQuery() {
         // Listen for query changes with debounce
         viewModelScope.launch {
             _searchQuery
@@ -64,7 +67,6 @@ class DealsViewModel @Inject constructor(
                     _filteredDeals.value = results
                 }
         }
-
     }
 
     /**
