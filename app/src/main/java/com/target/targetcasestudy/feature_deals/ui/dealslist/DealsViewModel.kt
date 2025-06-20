@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -49,18 +51,20 @@ class DealsViewModel @Inject constructor(
         // Listen for query changes with debounce
         viewModelScope.launch {
             _searchQuery
-                .debounce(300) // 300ms delay to reduce unnecessary calls
+                .debounce(300)
                 .distinctUntilChanged()
-                .collectLatest { query ->
+                .flatMapLatest { query ->
                     if (query.isBlank()) {
-                        _filteredDeals.value = emptyList()
+                        flowOf(emptyList())
                     } else {
-                        searchDealsUseCase(query).collectLatest {
-                            _filteredDeals.value = it
-                        }
+                        searchDealsUseCase(query) // returns Flow<List<Deals>>
                     }
                 }
+                .collectLatest { results ->
+                    _filteredDeals.value = results
+                }
         }
+
     }
 
     /**
